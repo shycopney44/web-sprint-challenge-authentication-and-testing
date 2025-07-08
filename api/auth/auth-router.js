@@ -35,9 +35,10 @@ router.post('/register', async (req, res) => {
     const [id] = await db('users').insert({ username, password: hash });
     const newUser = await db('users').where('id', id).first();
 
+    // Return full user object including hashed password
     res.status(201).json(newUser);
   } catch (err) {
-    res.status(500).json({ message: 'Error registering user', error: err.message });
+    res.status(500).json({ message: 'Error registering user' });
   }
 });
 
@@ -62,7 +63,7 @@ router.post('/login', async (req, res) => {
       token,
     });
   } catch (err) {
-    res.status(500).json({ message: 'Error logging in', error: err.message });
+    res.status(500).json({ message: 'Error logging in' });
   }
 });
 
