@@ -1,21 +1,22 @@
-// Write your tests here
-test('sanity', () => {
-  expect(true).toBe(true);
-});
-
 process.env.NODE_ENV = 'testing';
 
 const request = require('supertest');
 const db = require('../data/dbConfig');
 const server = require('./server'); // assumes this file loads express and uses routers
 
+beforeAll(async () => {
+  await db.migrate.rollback(); // Roll back to empty
+  await db.migrate.latest();   // Re-run all migrations
+});
+
 beforeEach(async () => {
-  await db('users').truncate();
+  await db('users').truncate(); // Clear users before each test
 });
 
 afterAll(async () => {
-  await db.destroy(); // cleanly close db connection after tests
+  await db.destroy(); // Close db connection
 });
+
 
 describe('Auth Endpoints', () => {
   describe('[POST] /api/auth/register', () => {
